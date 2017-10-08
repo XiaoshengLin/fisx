@@ -255,7 +255,7 @@ std::map<std::string, std::map<int, std::map<std::string, std::map<std::string, 
                 XRF::getMultilayerFluorescence(const std::vector<std::string> & elementFamilyLayer, \
                 const Elements & elementsLibrary, const int & secondary, \
                 const int & useGeometricEfficiency, const int & useMassFractions, \
-                const double & secondaryCalculationLimit)
+                const double & secondaryCalculationLimit) const
 {
     std::vector<std::string> elementList;
     std::vector<std::string> familyList;

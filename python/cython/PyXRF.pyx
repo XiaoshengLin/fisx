@@ -193,11 +193,13 @@ cdef class PyXRF:
         if sys.version > "3.0":
             elementName = toBytes(elementName)
             lineFamily = toBytes(lineFamily)
-            return toStringKeysAndValues(self.thisptr.getMultilayerFluorescence(elementName, deref(elementsLibrary.thisptr), \
+            with nogil:
+                return toStringKeysAndValues(self.thisptr.getMultilayerFluorescence(elementName, deref(elementsLibrary.thisptr), \
                             sampleLayer, lineFamily, secondary, useGeometricEfficiency, useMassFractions, \
                             secondaryCalculationLimit))
         else:
-            return self.thisptr.getMultilayerFluorescence(elementName, deref(elementsLibrary.thisptr), \
+            with nogil:
+                return self.thisptr.getMultilayerFluorescence(elementName, deref(elementsLibrary.thisptr), \
                             sampleLayer, lineFamily, secondary, useGeometricEfficiency, useMassFractions, \
                             secondaryCalculationLimit)
 

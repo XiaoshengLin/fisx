@@ -231,7 +231,7 @@ public:
                 const Elements & elementsLibrary, const int & secondary = 0, \
                 const int & useGeometricEfficiency = 1, \
                 const int & useMassFractions = 0, \
-                const double & secondaryCalculationLimit = 0.0);
+                const double & secondaryCalculationLimit = 0.0) const;
 
     std::map<std::string, std::map<int, std::map<std::string, std::map<std::string, double> > > > \
                 getMultilayerFluorescence(const std::vector<std::string> & elementList,
@@ -241,7 +241,7 @@ public:
                                           const int & secondary = 0, \
                                           const int & useGeometricEfficiency = 1, \
                                           const int & useMassFractions = 0, \
-                                          const double & secondaryCalculationLimit = 0.0);
+                                          const double & secondaryCalculationLimit = 0.0) const;
 
 
     double getEnergyThreshold(const std::string & elementName, const std::string & family, \
