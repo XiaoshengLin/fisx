@@ -2,7 +2,7 @@
 #
 # The fisx library for X-Ray Fluorescence
 #
-# Copyright (c) 2014-2016 European Synchrotron Radiation Facility
+# Copyright (c) 2014-2017 European Synchrotron Radiation Facility
 #
 # This file is part of the fisx X-ray developed by V.A. Sole
 #
@@ -52,10 +52,10 @@ cdef extern from "fisx_xrf.h" namespace "fisx":
         double getGeometricEfficiency(int) except +
 
         std_map[std_string, std_map[std_string, double]] getFluorescence(std_string, \
-                Elements, int, std_string, int, int, double) except +
+                Elements, int, std_string, int, int, double) nogil except +
 
         std_map[std_string, std_map[int, std_map[std_string, std_map[std_string, double]]]] \
-                getMultilayerFluorescence(std_vector[std_string], Elements, int, int, int, double) except +
+                getMultilayerFluorescence(std_vector[std_string], Elements, int, int, int, double) nogil except +
 
         std_map[std_string, std_map[int, std_map[std_string, std_map[std_string, double]]]] \
                 getMultilayerFluorescence(std_string, \

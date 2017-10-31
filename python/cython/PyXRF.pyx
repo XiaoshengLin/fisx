@@ -2,7 +2,7 @@
 #
 # The fisx library for X-Ray Fluorescence
 #
-# Copyright (c) 2014-2016 European Synchrotron Radiation Facility
+# Copyright (c) 2014-2017 European Synchrotron Radiation Facility
 #
 # This file is part of the fisx X-ray developed by V.A. Sole
 #
@@ -36,7 +36,8 @@ from libcpp.map cimport map as std_map
 
 from XRF cimport *
 from Layer cimport *
-    
+from Elements cimport *
+
 cdef class PyXRF:
     cdef XRF *thisptr
 
@@ -146,7 +147,7 @@ cdef class PyXRF:
 
     def getMultilayerFluorescence(self, elementFamilyLayer, PyElements elementsLibrary, \
                             int secondary = 0, int useGeometricEfficiency = 1, int useMassFractions = 0, \
-                            secondaryCalculationLimit = 0.0):
+                            double secondaryCalculationLimit = 0.0):
         """
         Input
         elementFamilyLayer - Vector of strings. Each string represents the information we are interested on.
@@ -176,13 +177,23 @@ cdef class PyXRF:
         """
         if sys.version > "3.0":
             elementFamilyLayer = [toBytes(x) for x in elementFamilyLayer]
-            return toStringKeysAndValues(self.thisptr.getMultilayerFluorescence(elementFamilyLayer, \
+            return toStringKeysAndValues(self._getMultilayerFluorescence(elementFamilyLayer, \
                             deref(elementsLibrary.thisptr), \
                             secondary, useGeometricEfficiency, \
                             useMassFractions, secondaryCalculationLimit))
         else:
-            return self.thisptr.getMultilayerFluorescence(elementFamilyLayer, \
+            return self._getMultilayerFluorescence(elementFamilyLayer, \
                             deref(elementsLibrary.thisptr), \
+                            secondary, useGeometricEfficiency, \
+                            useMassFractions, secondaryCalculationLimit)
+
+    cdef std_map[std_string, std_map[int, std_map[std_string, std_map[std_string, double]]]] \
+                 _getMultilayerFluorescence(self, std_vector[std_string] elementFamilyLayer, \
+                           Elements & elementsInstance, int secondary, int useGeometricEfficiency, int useMassFractions, \
+                           double secondaryCalculationLimit) nogil:
+        with nogil:
+            return self.thisptr.getMultilayerFluorescence(elementFamilyLayer, \
+                            elementsInstance, \
                             secondary, useGeometricEfficiency, \
                             useMassFractions, secondaryCalculationLimit)
 
@@ -193,13 +204,11 @@ cdef class PyXRF:
         if sys.version > "3.0":
             elementName = toBytes(elementName)
             lineFamily = toBytes(lineFamily)
-            with nogil:
-                return toStringKeysAndValues(self.thisptr.getMultilayerFluorescence(elementName, deref(elementsLibrary.thisptr), \
+            return toStringKeysAndValues(self.thisptr.getMultilayerFluorescence(elementName, deref(elementsLibrary.thisptr), \
                             sampleLayer, lineFamily, secondary, useGeometricEfficiency, useMassFractions, \
                             secondaryCalculationLimit))
         else:
-            with nogil:
-                return self.thisptr.getMultilayerFluorescence(elementName, deref(elementsLibrary.thisptr), \
+            return self.thisptr.getMultilayerFluorescence(elementName, deref(elementsLibrary.thisptr), \
                             sampleLayer, lineFamily, secondary, useGeometricEfficiency, useMassFractions, \
                             secondaryCalculationLimit)
 
