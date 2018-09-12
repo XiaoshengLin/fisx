@@ -278,6 +278,17 @@ public:
     const double & getScatteringAngle() const {return this->configuration.getScatteringAngle();};
     const int & getReferenceLayer() const {return this->configuration.getReferenceLayer();};
 
+        /*
+    Return a list with the elements used
+    */
+    std::vector<std::string> getDealtWithElements(const Elements & elementsLibrary) const;
+
+    /*
+    Fill the cache of the provided Elements instance
+    */
+    std::vector<std::string> const updateElementsLibraryCache(Elements & elementsLibrary);
+
+
 private:
     /*!
     Reference to elements library to be used for calculations

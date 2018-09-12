@@ -33,6 +33,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 namespace fisx
 {
@@ -243,6 +244,76 @@ double XRF::getEnergyThreshold(const std::string & elementName, const std::strin
     }
     return 0.0;
 }
+
+std::vector<std::string> XRF::getDealtWithElements(const Elements & elements) const
+{
+    std::vector<std::string> result;
+    const std::vector<Layer> beamFilters = this->getBeamFilters();
+    const std::vector<Layer> sampleList = this->getSample();
+    const std::vector<Layer> attenuatorList = this->getAttenuators();
+    const Detector detector = this->getDetector();
+    const std::vector<Material> materialList = this->getConfiguration().getMaterials();
+    std::map< std::string, double> composition;
+    std::map< std::string, double>::const_iterator const_it;
+    std::vector<Layer>::size_type nItems, idx;
+
+    // Beam filters
+    nItems = beamFilters.size();
+    for (idx = 0; idx < nItems; ++idx)
+    {
+        composition = elements.getComposition(beamFilters[idx].getMaterialName(), materialList);
+        for (const_it = composition.begin(); const_it != composition.end(); ++const_it)
+        {
+            if(std::find(result.begin(), result.end(), const_it->first) == result.end())
+            {
+                result.push_back(const_it->first);
+            }
+        }
+    }
+
+    // Sample
+    nItems = sampleList.size();
+    for (idx = 0; idx < nItems; ++idx)
+    {
+        composition = elements.getComposition(sampleList[idx].getMaterialName(), materialList);
+        for (const_it = composition.begin(); const_it != composition.end(); ++const_it)
+        {
+            if(std::find(result.begin(), result.end(), const_it->first) == result.end())
+            {
+                result.push_back(const_it->first);
+            }
+        }
+    }
+
+    // Attenuators
+    nItems = attenuatorList.size();
+    for (idx = 0; idx < nItems; ++idx)
+    {
+        composition = elements.getComposition(attenuatorList[idx].getMaterialName(), materialList);
+        for (const_it = composition.begin(); const_it != composition.end(); ++const_it)
+        {
+            if(std::find(result.begin(), result.end(), const_it->first) == result.end())
+            {
+                result.push_back(const_it->first);
+            }
+        }
+    }
+
+    //Detector
+    if (detector.name.length() > 0)
+    {
+        composition = elements.getComposition(detector.getMaterialName(), materialList);
+        for (const_it = composition.begin(); const_it != composition.end(); ++const_it)
+        {
+            if(std::find(result.begin(), result.end(), const_it->first) == result.end())
+            {
+                result.push_back(const_it->first);
+            }
+        }
+    }
+    return result;
+}
+
 
 const XRFConfig & XRF::getConfiguration() const
 {
