@@ -286,7 +286,8 @@ public:
     /*
     Fill the cache of the provided Elements instance
     */
-    std::vector<std::string> const updateElementsLibraryCache(Elements & elementsLibrary);
+   void updateElementsLibraryCache(Elements & elementsLibrary, \
+                                const std::vector<std::string> & additionalElements = std::vector<std::string>()) const;
 
 
 private:

@@ -315,6 +315,45 @@ std::vector<std::string> XRF::getDealtWithElements(const Elements & elements) co
 }
 
 
+void XRF::updateElementsLibraryCache(Elements & elementsLibrary, \
+                                const std::vector<std::string> & additionalElements) const
+{
+    std::vector<std::string> elementList = this->getDealtWithElements(elementsLibrary);
+    std::vector<std::string>::size_type nItems, idx;
+    std::vector<double> energyList = this->getBeam().getBeamAsDoubleVectors()[0];
+
+    nItems = additionalElements.size();
+    for (idx = 0; idx < nItems; ++idx)
+    {
+        if(std::find(elementList.begin(), elementList.end(), additionalElements[idx]) == elementList.end())
+        {
+            elementList.push_back(additionalElements[idx]);
+        }
+    }
+    // We've got the list of elements to update
+    // We need the list of additional energies
+    nItems = elementList.size();
+    for (idx = 0; idx < nItems; ++idx)
+    {
+        std::map < std::string, double> additionalEnergies = elementsLibrary.getEmittedXRayLines(elementList[idx]);
+        for (std::map < std::string, double>::const_iterator c_it = additionalEnergies.begin(); c_it != additionalEnergies.end(); ++c_it)
+        {
+            if(std::find(energyList.begin(), energyList.end(), c_it->second) == energyList.end())
+            {
+                energyList.push_back(c_it->second);
+            }
+        }
+    }
+
+    // update the cache
+    nItems = elementList.size();
+    for (idx = 0; idx < nItems; ++idx)
+    {
+        elementsLibrary.updateCache(elementList[idx], energyList);
+    }
+}
+
+
 const XRFConfig & XRF::getConfiguration() const
 {
     return this->configuration;
