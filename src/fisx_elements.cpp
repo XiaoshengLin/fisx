@@ -1448,7 +1448,7 @@ std::map<std::string, double> Elements::getComposition(const std::string & name,
     {
         total += c_it->second;
     }
-    std::cout << "total = " << total << std::endl;
+
     for (c_it = result.begin(); c_it != result.end(); ++c_it)
     {
         result[c_it->first] /= total;
